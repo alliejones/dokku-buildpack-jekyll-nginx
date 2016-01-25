@@ -13,6 +13,23 @@ BUILD_DIR=$1
 CACHE_DIR=$2
 LP_DIR=`cd $(dirname $0); cd ..; pwd`
 
+if [[ `ruby -v` == "ruby 1"* ]]; then
+  echo "-----> Installing Ruby 2.2.1"
+  git clone https://github.com/sstephenson/rbenv.git ~/.rbenv
+  git clone https://github.com/garnieretienne/rvm-download.git ~/.rbenv/plugins/rvm-download
+  export PATH="$HOME/.rbenv/shims:$HOME/.rbenv/bin:$PATH"
+  rbenv download 2.2.1
+  rbenv rehash
+  rbenv global 2.2.1
+else
+  echo "-----> Using `ruby -v`"
+fi
+
+git clone https://github.com/creationix/nvm.git ~/.nvm && cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`
+. ~/.nvm/nvm.sh
+nvm install 5.0
+nvm use 5.0
+
 # s3 packages
 # NGINX_PACKAGE="http://${S3_BUCKET}.s3.amazonaws.com/nginx-${NGINX_VERSION}.tgz"
 NGINX_PACKAGE="https://s3.amazonaws.com/devmynd-github/heroku-nginx-1.6.0.tar.gz"
